@@ -884,8 +884,10 @@ export const RowCalculationDialog = ({
   };
 
   useEffect(() => {
-    handleGetAllAPiData();
-  }, []);
+    if (rows && rows.length > 0) {
+      handleGetAllAPiData();
+    }
+  }, [isOpen]);
   const tableRef = useRef<HTMLDivElement>(null);
   const [colWidths, setColWidths] = useState<number[]>([]);
   useLayoutEffect(() => {
