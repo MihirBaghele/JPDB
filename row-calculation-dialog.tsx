@@ -779,22 +779,23 @@ export const RowCalculationDialog = ({
       // Originator Price API returns array directly
       let apiData = Array.isArray(getOriPriceRows) ? getOriPriceRows : [];
       
+      // Filter by country only since API response doesn't include programName
       let filteredApiValue = apiData.filter(
-        (rowEle: any) => rowEle.country == currentFactorRow[0].value && rowEle.programName == currentFactorRow[1].value
+        (rowEle: any) => rowEle.country == currentFactorRow[0].value
       );
       
       if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
           newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
-              re.value = e.value;
+              re.value = e.value ?? '0';
             }
           });
         });
         filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any) => {
           newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
-              re.value = e.value;
+              re.value = e.value ?? '0';
             }
           });
         });
