@@ -781,23 +781,32 @@ export const RowCalculationDialog = ({
     }
 
     if (cardType == 'Originator Price') {
+      console.log('🔵 Originator Price - Starting mapping');
       let currentFactorRow = newSetRows[1];
+      console.log('Current Factor Row:', currentFactorRow);
+      console.log('Looking for country:', currentFactorRow[0]?.value);
       
       // Originator Price API returns array directly
       let apiData = Array.isArray(getOriPriceRows) ? getOriPriceRows : [];
+      console.log('API Data:', apiData);
       
       // Filter by country only (Originator Price API doesn't return programName)
       let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.country === currentFactorRow[0].value
       );
+      console.log('Filtered API Value:', filteredApiValue);
       
       if (filteredApiValue && filteredApiValue.length > 0) {
+        console.log('✅ Found matching data');
+        
         // Map rowOrgpricefactor to row 1 (factor row)
         if (filteredApiValue[0].rowOrgpricefactor && Array.isArray(filteredApiValue[0].rowOrgpricefactor)) {
+          console.log('Mapping rowOrgpricefactor:', filteredApiValue[0].rowOrgpricefactor);
           filteredApiValue[0].rowOrgpricefactor.forEach((apiItem: any) => {
+            console.log(`  Factor: year=${apiItem.year}, value=${apiItem.value}`);
             newSetRows[1].forEach((rowCell: any) => {
-              // Strict comparison: convert both to numbers for matching
               if (Number(apiItem.year) === Number(rowCell.key)) {
+                console.log(`    ✅ Match! Setting ${rowCell.key} to ${apiItem.value}`);
                 rowCell.value = apiItem.value ?? '';
               }
             });
@@ -806,18 +815,24 @@ export const RowCalculationDialog = ({
         
         // Map rowOriginatorExfactorPrice to row 2 (calculated row)
         if (filteredApiValue[0].rowOriginatorExfactorPrice && Array.isArray(filteredApiValue[0].rowOriginatorExfactorPrice)) {
+          console.log('Mapping rowOriginatorExfactorPrice:', filteredApiValue[0].rowOriginatorExfactorPrice);
           filteredApiValue[0].rowOriginatorExfactorPrice.forEach((apiItem: any) => {
+            console.log(`  Price: year=${apiItem.year}, value=${apiItem.value}`);
             newSetRows[2].forEach((rowCell: any) => {
-              // Strict comparison: convert both to numbers for matching
               if (Number(apiItem.year) === Number(rowCell.key)) {
+                console.log(`    ✅ Match! Setting ${rowCell.key} to ${apiItem.value}`);
                 rowCell.value = apiItem.value ?? '';
               }
             });
           });
         }
 
+        console.log('Final newSetRows:', JSON.parse(JSON.stringify(newSetRows)));
         // Create new array reference to trigger React re-render
         setRows([...newSetRows]);
+        console.log('✅ setRows called');
+      } else {
+        console.log('❌ No matching data found');
       }
     }
 
@@ -887,9 +902,7 @@ export const RowCalculationDialog = ({
   };
 
   useEffect(() => {
-    if (rows && rows.length > 0) {
-      handleGetAllAPiData();
-    }
+    handleGetAllAPiData();
   }, []);
   const tableRef = useRef<HTMLDivElement>(null);
   const [colWidths, setColWidths] = useState<number[]>([]);
