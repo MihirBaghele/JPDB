@@ -741,10 +741,11 @@ export const RowCalculationDialog = ({
     // let currentFifthRow = rows[4];
     if (cardType == 'Originator Volume') {
       let currentThirdRow = newSetRows[2];
+      // Originator Volume API doesn't return programName, only country
       let filteredApiValue = getOriVolRows[0]?.data?.filter(
-        (rowEle: any) => rowEle.programName == currentThirdRow[1].value && rowEle.country == currentThirdRow[0].value
+        (rowEle: any) => rowEle.country == currentThirdRow[0].value
       );
-      if (filteredApiValue.length) {
+      if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
           newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
@@ -772,10 +773,11 @@ export const RowCalculationDialog = ({
 
     if (cardType == 'Originator Price') {
       let currentFactorRow = newSetRows[1];
+      // Originator Price API doesn't return programName, only country
       let filteredApiValue = getOriPriceRows[0]?.data?.filter(
-        (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+        (rowEle: any) => rowEle.country == currentFactorRow[0].value
       );
-      if (filteredApiValue.length) {
+      if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
           newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
