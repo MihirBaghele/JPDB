@@ -779,18 +779,14 @@ export const RowCalculationDialog = ({
         filteredApiValue[0].rowOrgpricefactor.forEach((e: any, i: any) => {
           newSetRows[1].map((re: any, rei: any) => {
             if (e.year == re.key) {
-              // FIX: Changed from e.price ?? e.value to e.value ?? e.price
-              // because API returns 'value' property, not 'price'
-              re.value = e.value ?? e.price ?? '';
+              re.value = e.value ?? '';
             }
           });
         });
         filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any, i: any) => {
           newSetRows[2].map((re: any, rei: any) => {
             if (e.year == re.key) {
-              // FIX: Changed from e.price ?? e.value to e.value ?? e.price
-              // because API returns 'value' property, not 'price'
-              re.value = e.value ?? e.price ?? '';
+              re.value = e.value ?? '';
             }
           });
         });
