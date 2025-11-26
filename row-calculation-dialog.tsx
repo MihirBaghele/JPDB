@@ -748,79 +748,70 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.country == currentThirdRow[0].value
       );
       
-      if (filteredApiValue && filteredApiValue.length) {
-        filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
-          newSetRows[2].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
+      if (filteredApiValue && filteredApiValue.length > 0) {
+        // Map rowOrgvolfactor to row 2
+        filteredApiValue[0].rowOrgvolfactor.forEach((apiItem: any) => {
+          newSetRows[2].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value;
             }
           });
         });
-        filteredApiValue[0].rowOriginatorMarketSize.forEach((e: any) => {
-          newSetRows[3].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
+        
+        // Map rowOriginatorMarketSize to row 3
+        filteredApiValue[0].rowOriginatorMarketSize.forEach((apiItem: any) => {
+          newSetRows[3].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value;
             }
           });
         });
-        filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((e: any) => {
-          newSetRows[4].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
+        
+        // Map rowOriginatorMarketSizeAfter to row 4
+        filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((apiItem: any) => {
+          newSetRows[4].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value;
             }
           });
         });
-        setRows(newSetRows);
+        
+        setRows([...newSetRows]);
       }
     }
 
     if (cardType == 'Originator Price') {
       let currentFactorRow = newSetRows[1];
-      console.log('=== Originator Price Debug ===');
-      console.log('Current Factor Row:', currentFactorRow);
-      console.log('Looking for country:', currentFactorRow[0].value);
-      console.log('API Response:', getOriPriceRows);
       
       // Originator Price API returns array directly
       let apiData = Array.isArray(getOriPriceRows) ? getOriPriceRows : [];
-      console.log('API Data (processed):', apiData);
       
       let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.country == currentFactorRow[0].value
       );
-      console.log('Filtered API Value:', filteredApiValue);
-      console.log('Filtered length:', filteredApiValue.length);
       
-      if (filteredApiValue && filteredApiValue.length) {
-        console.log('Found matching data, starting to map values...');
-        console.log('rowOrgpricefactor:', filteredApiValue[0].rowOrgpricefactor);
-        console.log('rowOriginatorExfactorPrice:', filteredApiValue[0].rowOriginatorExfactorPrice);
-        
-        filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
-          console.log(`Mapping factor year ${e.year} with value ${e.value}`);
-          newSetRows[1].forEach((re: any) => {
-            if (e.year == re.key) {
-              console.log(`  Found matching year ${re.key}, setting value from ${re.value} to ${e.value}`);
-              re.value = e.value ?? '';
+      if (filteredApiValue && filteredApiValue.length > 0) {
+        // Map rowOrgpricefactor to row 1
+        filteredApiValue[0].rowOrgpricefactor.forEach((apiItem: any) => {
+          newSetRows[1].forEach((rowCell: any) => {
+            // Compare year with key (handle both string and number comparison)
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value ?? '';
             }
           });
         });
-        filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any) => {
-          console.log(`Mapping price year ${e.year} with value ${e.value}`);
-          newSetRows[2].forEach((re: any) => {
-            if (e.year == re.key) {
-              console.log(`  Found matching year ${re.key}, setting value from ${re.value} to ${e.value}`);
-              re.value = e.value ?? '';
+        
+        // Map rowOriginatorExfactorPrice to row 2
+        filteredApiValue[0].rowOriginatorExfactorPrice.forEach((apiItem: any) => {
+          newSetRows[2].forEach((rowCell: any) => {
+            // Compare year with key (handle both string and number comparison)
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value ?? '';
             }
           });
         });
 
-        console.log('Final newSetRows:', newSetRows);
-        setRows(newSetRows);
-        console.log('=== End Originator Price Debug ===');
-      } else {
-        console.log('No matching data found!');
-        console.log('=== End Originator Price Debug ===');
+        setRows([...newSetRows]);
       }
     }
 
@@ -833,23 +824,26 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
       
-      if (filteredApiValue && filteredApiValue.length) {
-        filteredApiValue[0].rowSandozpriFac.forEach((e: any) => {
-          newSetRows[1].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
+      if (filteredApiValue && filteredApiValue.length > 0) {
+        // Map rowSandozpriFac to row 1
+        filteredApiValue[0].rowSandozpriFac.forEach((apiItem: any) => {
+          newSetRows[1].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value;
             }
           });
         });
-        filteredApiValue[0].rowSandozPrice.forEach((e: any) => {
-          newSetRows[2].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
+        
+        // Map rowSandozPrice to row 2
+        filteredApiValue[0].rowSandozPrice.forEach((apiItem: any) => {
+          newSetRows[2].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value;
             }
           });
         });
 
-        setRows(newSetRows);
+        setRows([...newSetRows]);
       }
     }
 
@@ -862,23 +856,26 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
       
-      if (filteredApiValue && filteredApiValue.length) {
-        filteredApiValue[0].rowSandozvolFac.forEach((e: any) => {
-          newSetRows[1].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value ?? '';
+      if (filteredApiValue && filteredApiValue.length > 0) {
+        // Map rowSandozvolFac to row 1
+        filteredApiValue[0].rowSandozvolFac.forEach((apiItem: any) => {
+          newSetRows[1].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value ?? '';
             }
           });
         });
-        filteredApiValue[0].rowSandozVolume.forEach((e: any) => {
-          newSetRows[2].forEach((re: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
+        
+        // Map rowSandozVolume to row 2
+        filteredApiValue[0].rowSandozVolume.forEach((apiItem: any) => {
+          newSetRows[2].forEach((rowCell: any) => {
+            if (Number(apiItem.year) === Number(rowCell.key)) {
+              rowCell.value = apiItem.value;
             }
           });
         });
 
-        setRows(newSetRows);
+        setRows([...newSetRows]);
       }
     }
   };
