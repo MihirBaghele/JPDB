@@ -745,22 +745,22 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.programName == currentThirdRow[1].value && rowEle.country == currentThirdRow[0].value
       );
       if (filteredApiValue.length) {
-        filteredApiValue[0].rowOrgvolfactor.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
+        filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
+          newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value;
             }
           });
         });
-        filteredApiValue[0].rowOriginatorMarketSize.forEach((e: any, i: any) => {
-          newSetRows[3].map((re: any, rei: any) => {
+        filteredApiValue[0].rowOriginatorMarketSize.forEach((e: any) => {
+          newSetRows[3].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value;
             }
           });
         });
-        filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((e: any, i: any) => {
-          newSetRows[4].map((re: any, rei: any) => {
+        filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((e: any) => {
+          newSetRows[4].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value;
             }
@@ -776,15 +776,15 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
       if (filteredApiValue.length) {
-        filteredApiValue[0].rowOrgpricefactor.forEach((e: any, i: any) => {
-          newSetRows[1].map((re: any, rei: any) => {
+        filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
+          newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value ?? '';
             }
           });
         });
-        filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
+        filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any) => {
+          newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value ?? '';
             }
@@ -801,15 +801,15 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
       if (filteredApiValue.length) {
-        filteredApiValue[0].rowSandozpriFac.forEach((e: any, i: any) => {
-          newSetRows[1].map((re: any, rei: any) => {
+        filteredApiValue[0].rowSandozpriFac.forEach((e: any) => {
+          newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value;
             }
           });
         });
-        filteredApiValue[0].rowSandozPrice.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
+        filteredApiValue[0].rowSandozPrice.forEach((e: any) => {
+          newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value;
             }
@@ -826,15 +826,15 @@ export const RowCalculationDialog = ({
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
       if (filteredApiValue.length) {
-        filteredApiValue[0].rowSandozvolFac.forEach((e: any, i: any) => {
-          newSetRows[1].map((re: any, rei: any) => {
+        filteredApiValue[0].rowSandozvolFac.forEach((e: any) => {
+          newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
-              re.value = e.value ?? e.price ?? '';
+              re.value = e.value ?? '';
             }
           });
         });
-        filteredApiValue[0].rowSandozVolume.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
+        filteredApiValue[0].rowSandozVolume.forEach((e: any) => {
+          newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
               re.value = e.value;
             }
