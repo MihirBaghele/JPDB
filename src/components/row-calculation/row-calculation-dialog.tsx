@@ -721,138 +721,141 @@ export const RowCalculationDialog = ({
   };
 
   const handleGetAllAPiData = async (): Promise<void> => {
-    let getOriVolRows = await getRowOriginatorVolume(
-      activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
-    );
-    let getOriPriceRows = await getRowOriginatorPrice(
-      activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
-    );
-
-    let getSandozVolRows = await getRowSandozVolume(
-      activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
-    );
-    let getSandozPricRows = await getRowSandozPrice(
-      activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
-    );
-
-    const newSetRows = [...rows];
-
-    // let currentFourthRow = rows[3];
-    // let currentFifthRow = rows[4];
-    if (cardType == 'Originator Volume') {
-      let currentThirdRow = newSetRows[2];
-      let filteredApiValue = getOriVolRows[0]?.data?.filter(
-        (rowEle: any) => rowEle.programName == currentThirdRow[1].value && rowEle.country == currentThirdRow[0].value
+    try {
+      let getOriVolRows = await getRowOriginatorVolume(
+        activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
       );
-      if (filteredApiValue.length) {
-        filteredApiValue[0].rowOrgvolfactor.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              // FIXED: Use e.value consistently
-              re.value = e.value;
-            }
-          });
-        });
-        filteredApiValue[0].rowOriginatorMarketSize.forEach((e: any, i: any) => {
-          newSetRows[3].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
-            }
-          });
-        });
-        filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((e: any, i: any) => {
-          newSetRows[4].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
-            }
-          });
-        });
-        setRows(newSetRows);
-      }
-    }
-
-    if (cardType == 'Originator Price') {
-      let currentFactorRow = newSetRows[1];
-      let filteredApiValue = getOriPriceRows[0]?.data?.filter(
-        (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+      let getOriPriceRows = await getRowOriginatorPrice(
+        activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
       );
-      if (filteredApiValue.length) {
-        filteredApiValue[0].rowOrgpricefactor.forEach((e: any, i: any) => {
-          newSetRows[1].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              // FIXED: Use e.value consistently (removed e.price check)
-              re.value = e.value ?? '';
-            }
-          });
-        });
-        filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              // FIXED: Use e.value consistently (removed e.price check)
-              re.value = e.value ?? '';
-            }
-          });
-        });
 
-        setRows(newSetRows);
-      }
-    }
-
-    if (cardType == 'Sandoz Price') {
-      let currentFactorRow = newSetRows[1];
-      let filteredApiValue = getSandozPricRows[0]?.data?.filter(
-        (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+      let getSandozVolRows = await getRowSandozVolume(
+        activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
       );
-      if (filteredApiValue.length) {
-        filteredApiValue[0].rowSandozpriFac.forEach((e: any, i: any) => {
-          newSetRows[1].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
-            }
-          });
-        });
-        filteredApiValue[0].rowSandozPrice.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
-            }
-          });
-        });
-
-        setRows(newSetRows);
-      }
-    }
-
-    if (cardType == 'Sandoz Volume') {
-      let currentFactorRow = newSetRows[1];
-      let filteredApiValue = getSandozVolRows[0]?.data?.filter(
-        (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+      let getSandozPricRows = await getRowSandozPrice(
+        activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
       );
-      if (filteredApiValue.length) {
-        filteredApiValue[0].rowSandozvolFac.forEach((e: any, i: any) => {
-          newSetRows[1].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              // FIXED: Use e.value consistently (removed e.price check)
-              re.value = e.value ?? '';
-            }
-          });
-        });
-        filteredApiValue[0].rowSandozVolume.forEach((e: any, i: any) => {
-          newSetRows[2].map((re: any, rei: any) => {
-            if (e.year == re.key) {
-              re.value = e.value;
-            }
-          });
-        });
 
-        setRows(newSetRows);
+      // Create a deep copy of rows to ensure proper state update
+      const newSetRows = rows.map(row => row.map(cell => ({ ...cell })));
+
+      // let currentFourthRow = rows[3];
+      // let currentFifthRow = rows[4];
+      if (cardType == 'Originator Volume') {
+        let currentThirdRow = newSetRows[2];
+        let filteredApiValue = getOriVolRows[0]?.data?.filter(
+          (rowEle: any) => rowEle.programName == currentThirdRow[1].value && rowEle.country == currentThirdRow[0].value
+        );
+        if (filteredApiValue && filteredApiValue.length > 0) {
+          // Update row 2 - RoW ORG volume factor
+          filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
+            newSetRows[2].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+          // Update row 3 - Originator Market size
+          filteredApiValue[0].rowOriginatorMarketSize.forEach((e: any) => {
+            newSetRows[3].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+          // Update row 4 - Originator Market size after
+          filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((e: any) => {
+            newSetRows[4].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+          setRows(newSetRows);
+        }
+      } else if (cardType == 'Originator Price') {
+        let currentFactorRow = newSetRows[1];
+        let filteredApiValue = getOriPriceRows[0]?.data?.filter(
+          (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+        );
+        if (filteredApiValue && filteredApiValue.length > 0) {
+          // Update row 1 - RoW ORG price factor
+          filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
+            newSetRows[1].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+          // Update row 2 - Originator ex-factory price
+          filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any) => {
+            newSetRows[2].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+
+          setRows(newSetRows);
+        }
+      } else if (cardType == 'Sandoz Price') {
+        let currentFactorRow = newSetRows[1];
+        let filteredApiValue = getSandozPricRows[0]?.data?.filter(
+          (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+        );
+        if (filteredApiValue && filteredApiValue.length > 0) {
+          filteredApiValue[0].rowSandozpriFac.forEach((e: any) => {
+            newSetRows[1].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+          filteredApiValue[0].rowSandozPrice.forEach((e: any) => {
+            newSetRows[2].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+
+          setRows(newSetRows);
+        }
+      } else if (cardType == 'Sandoz Volume') {
+        let currentFactorRow = newSetRows[1];
+        let filteredApiValue = getSandozVolRows[0]?.data?.filter(
+          (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
+        );
+        if (filteredApiValue && filteredApiValue.length > 0) {
+          filteredApiValue[0].rowSandozvolFac.forEach((e: any) => {
+            newSetRows[1].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+          filteredApiValue[0].rowSandozVolume.forEach((e: any) => {
+            newSetRows[2].forEach((re: any) => {
+              if (e.year == re.key) {
+                re.value = e.value ?? '0';
+              }
+            });
+          });
+
+          setRows(newSetRows);
+        }
       }
+    } catch (error) {
+      console.error('Error fetching API data:', error);
     }
   };
 
   useEffect(() => {
-    handleGetAllAPiData();
-  }, []);
+    // Only fetch API data after default rows are set
+    if (rows.length > 0) {
+      handleGetAllAPiData();
+    }
+  }, [cardType]); // Re-fetch when cardType changes
   const tableRef = useRef<HTMLDivElement>(null);
   const [colWidths, setColWidths] = useState<number[]>([]);
   useLayoutEffect(() => {
