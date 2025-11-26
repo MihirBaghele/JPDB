@@ -786,31 +786,37 @@ export const RowCalculationDialog = ({
       // Originator Price API returns array directly
       let apiData = Array.isArray(getOriPriceRows) ? getOriPriceRows : [];
       
+      // Filter by country only (Originator Price API doesn't return programName)
       let filteredApiValue = apiData.filter(
-        (rowEle: any) => rowEle.country == currentFactorRow[0].value
+        (rowEle: any) => rowEle.country === currentFactorRow[0].value
       );
       
       if (filteredApiValue && filteredApiValue.length > 0) {
-        // Map rowOrgpricefactor to row 1
-        filteredApiValue[0].rowOrgpricefactor.forEach((apiItem: any) => {
-          newSetRows[1].forEach((rowCell: any) => {
-            // Compare year with key (handle both string and number comparison)
-            if (Number(apiItem.year) === Number(rowCell.key)) {
-              rowCell.value = apiItem.value ?? '';
-            }
+        // Map rowOrgpricefactor to row 1 (factor row)
+        if (filteredApiValue[0].rowOrgpricefactor && Array.isArray(filteredApiValue[0].rowOrgpricefactor)) {
+          filteredApiValue[0].rowOrgpricefactor.forEach((apiItem: any) => {
+            newSetRows[1].forEach((rowCell: any) => {
+              // Strict comparison: convert both to numbers for matching
+              if (Number(apiItem.year) === Number(rowCell.key)) {
+                rowCell.value = apiItem.value ?? '';
+              }
+            });
           });
-        });
+        }
         
-        // Map rowOriginatorExfactorPrice to row 2
-        filteredApiValue[0].rowOriginatorExfactorPrice.forEach((apiItem: any) => {
-          newSetRows[2].forEach((rowCell: any) => {
-            // Compare year with key (handle both string and number comparison)
-            if (Number(apiItem.year) === Number(rowCell.key)) {
-              rowCell.value = apiItem.value ?? '';
-            }
+        // Map rowOriginatorExfactorPrice to row 2 (calculated row)
+        if (filteredApiValue[0].rowOriginatorExfactorPrice && Array.isArray(filteredApiValue[0].rowOriginatorExfactorPrice)) {
+          filteredApiValue[0].rowOriginatorExfactorPrice.forEach((apiItem: any) => {
+            newSetRows[2].forEach((rowCell: any) => {
+              // Strict comparison: convert both to numbers for matching
+              if (Number(apiItem.year) === Number(rowCell.key)) {
+                rowCell.value = apiItem.value ?? '';
+              }
+            });
           });
-        });
+        }
 
+        // Create new array reference to trigger React re-render
         setRows([...newSetRows]);
       }
     }
