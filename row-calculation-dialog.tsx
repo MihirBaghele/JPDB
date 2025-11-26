@@ -735,30 +735,18 @@ export const RowCalculationDialog = ({
       activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
     );
 
-    // Debug: Check API response structure
-    console.log('Originator Volume API Response:', getOriVolRows);
-    console.log('Originator Price API Response:', getOriPriceRows);
-    console.log('Sandoz Volume API Response:', getSandozVolRows);
-    console.log('Sandoz Price API Response:', getSandozPricRows);
-
     const newSetRows = [...rows];
 
     // let currentFourthRow = rows[3];
     // let currentFifthRow = rows[4];
     if (cardType == 'Originator Volume') {
       let currentThirdRow = newSetRows[2];
-      // Originator Volume API doesn't return programName, only country
-      console.log('Originator Volume - Looking for country:', currentThirdRow[0].value);
-      console.log('Originator Volume - API Data:', getOriVolRows[0]?.data);
+      // Originator Volume API returns array directly
+      let apiData = Array.isArray(getOriVolRows) ? getOriVolRows : [];
       
-      let apiData = getOriVolRows[0]?.data || getOriVolRows?.data || getOriVolRows || [];
-      console.log('Originator Volume - Processed API Data:', apiData);
-      
-      let filteredApiValue = Array.isArray(apiData) ? apiData.filter(
+      let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.country == currentThirdRow[0].value
-      ) : [];
-      
-      console.log('Originator Volume - Filtered Result:', filteredApiValue);
+      );
       
       if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
@@ -788,18 +776,12 @@ export const RowCalculationDialog = ({
 
     if (cardType == 'Originator Price') {
       let currentFactorRow = newSetRows[1];
-      // Originator Price API doesn't return programName, only country
-      console.log('Originator Price - Looking for country:', currentFactorRow[0].value);
-      console.log('Originator Price - API Data:', getOriPriceRows[0]?.data);
+      // Originator Price API returns array directly
+      let apiData = Array.isArray(getOriPriceRows) ? getOriPriceRows : [];
       
-      let apiData = getOriPriceRows[0]?.data || getOriPriceRows?.data || getOriPriceRows || [];
-      console.log('Originator Price - Processed API Data:', apiData);
-      
-      let filteredApiValue = Array.isArray(apiData) ? apiData.filter(
+      let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.country == currentFactorRow[0].value
-      ) : [];
-      
-      console.log('Originator Price - Filtered Result:', filteredApiValue);
+      );
       
       if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
@@ -823,10 +805,14 @@ export const RowCalculationDialog = ({
 
     if (cardType == 'Sandoz Price') {
       let currentFactorRow = newSetRows[1];
-      let filteredApiValue = getSandozPricRows[0]?.data?.filter(
+      // Sandoz Price API returns array directly
+      let apiData = Array.isArray(getSandozPricRows) ? getSandozPricRows : [];
+      
+      let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
-      if (filteredApiValue.length) {
+      
+      if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowSandozpriFac.forEach((e: any) => {
           newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
@@ -848,10 +834,14 @@ export const RowCalculationDialog = ({
 
     if (cardType == 'Sandoz Volume') {
       let currentFactorRow = newSetRows[1];
-      let filteredApiValue = getSandozVolRows[0]?.data?.filter(
+      // Sandoz Volume API returns array directly
+      let apiData = Array.isArray(getSandozVolRows) ? getSandozVolRows : [];
+      
+      let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
       );
-      if (filteredApiValue.length) {
+      
+      if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowSandozvolFac.forEach((e: any) => {
           newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
