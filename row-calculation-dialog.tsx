@@ -735,6 +735,12 @@ export const RowCalculationDialog = ({
       activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
     );
 
+    // Debug: Check API response structure
+    console.log('Originator Volume API Response:', getOriVolRows);
+    console.log('Originator Price API Response:', getOriPriceRows);
+    console.log('Sandoz Volume API Response:', getSandozVolRows);
+    console.log('Sandoz Price API Response:', getSandozPricRows);
+
     const newSetRows = [...rows];
 
     // let currentFourthRow = rows[3];
@@ -742,9 +748,18 @@ export const RowCalculationDialog = ({
     if (cardType == 'Originator Volume') {
       let currentThirdRow = newSetRows[2];
       // Originator Volume API doesn't return programName, only country
-      let filteredApiValue = getOriVolRows[0]?.data?.filter(
+      console.log('Originator Volume - Looking for country:', currentThirdRow[0].value);
+      console.log('Originator Volume - API Data:', getOriVolRows[0]?.data);
+      
+      let apiData = getOriVolRows[0]?.data || getOriVolRows?.data || getOriVolRows || [];
+      console.log('Originator Volume - Processed API Data:', apiData);
+      
+      let filteredApiValue = Array.isArray(apiData) ? apiData.filter(
         (rowEle: any) => rowEle.country == currentThirdRow[0].value
-      );
+      ) : [];
+      
+      console.log('Originator Volume - Filtered Result:', filteredApiValue);
+      
       if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
           newSetRows[2].forEach((re: any) => {
@@ -774,9 +789,18 @@ export const RowCalculationDialog = ({
     if (cardType == 'Originator Price') {
       let currentFactorRow = newSetRows[1];
       // Originator Price API doesn't return programName, only country
-      let filteredApiValue = getOriPriceRows[0]?.data?.filter(
+      console.log('Originator Price - Looking for country:', currentFactorRow[0].value);
+      console.log('Originator Price - API Data:', getOriPriceRows[0]?.data);
+      
+      let apiData = getOriPriceRows[0]?.data || getOriPriceRows?.data || getOriPriceRows || [];
+      console.log('Originator Price - Processed API Data:', apiData);
+      
+      let filteredApiValue = Array.isArray(apiData) ? apiData.filter(
         (rowEle: any) => rowEle.country == currentFactorRow[0].value
-      );
+      ) : [];
+      
+      console.log('Originator Price - Filtered Result:', filteredApiValue);
+      
       if (filteredApiValue && filteredApiValue.length) {
         filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
           newSetRows[1].forEach((re: any) => {
