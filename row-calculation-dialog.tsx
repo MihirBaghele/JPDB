@@ -776,30 +776,51 @@ export const RowCalculationDialog = ({
 
     if (cardType == 'Originator Price') {
       let currentFactorRow = newSetRows[1];
+      console.log('=== Originator Price Debug ===');
+      console.log('Current Factor Row:', currentFactorRow);
+      console.log('Looking for country:', currentFactorRow[0].value);
+      console.log('API Response:', getOriPriceRows);
+      
       // Originator Price API returns array directly
       let apiData = Array.isArray(getOriPriceRows) ? getOriPriceRows : [];
+      console.log('API Data (processed):', apiData);
       
       let filteredApiValue = apiData.filter(
         (rowEle: any) => rowEle.country == currentFactorRow[0].value
       );
+      console.log('Filtered API Value:', filteredApiValue);
+      console.log('Filtered length:', filteredApiValue.length);
       
       if (filteredApiValue && filteredApiValue.length) {
+        console.log('Found matching data, starting to map values...');
+        console.log('rowOrgpricefactor:', filteredApiValue[0].rowOrgpricefactor);
+        console.log('rowOriginatorExfactorPrice:', filteredApiValue[0].rowOriginatorExfactorPrice);
+        
         filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
+          console.log(`Mapping factor year ${e.year} with value ${e.value}`);
           newSetRows[1].forEach((re: any) => {
             if (e.year == re.key) {
+              console.log(`  Found matching year ${re.key}, setting value from ${re.value} to ${e.value}`);
               re.value = e.value ?? '';
             }
           });
         });
         filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any) => {
+          console.log(`Mapping price year ${e.year} with value ${e.value}`);
           newSetRows[2].forEach((re: any) => {
             if (e.year == re.key) {
+              console.log(`  Found matching year ${re.key}, setting value from ${re.value} to ${e.value}`);
               re.value = e.value ?? '';
             }
           });
         });
 
+        console.log('Final newSetRows:', newSetRows);
         setRows(newSetRows);
+        console.log('=== End Originator Price Debug ===');
+      } else {
+        console.log('No matching data found!');
+        console.log('=== End Originator Price Debug ===');
       }
     }
 
