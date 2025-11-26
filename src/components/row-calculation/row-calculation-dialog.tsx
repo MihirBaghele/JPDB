@@ -736,111 +736,197 @@ export const RowCalculationDialog = ({
         activeForecastItems.traditional_forecast_id ? activeForecastItems.traditional_forecast_id : 61
       );
 
+      console.log('API Response - Originator Volume:', getOriVolRows);
+      console.log('API Response - Originator Price:', getOriPriceRows);
+      console.log('API Response - Sandoz Volume:', getSandozVolRows);
+      console.log('API Response - Sandoz Price:', getSandozPricRows);
+
       // Create a deep copy of rows to ensure proper state update
       const newSetRows = rows.map(row => row.map(cell => ({ ...cell })));
 
-      // let currentFourthRow = rows[3];
-      // let currentFifthRow = rows[4];
       if (cardType == 'Originator Volume') {
         let currentThirdRow = newSetRows[2];
-        let filteredApiValue = getOriVolRows[0]?.data?.filter(
+        console.log('Looking for:', { 
+          programName: currentThirdRow[1].value, 
+          country: currentThirdRow[0].value 
+        });
+        
+        // Handle different possible response structures
+        let apiData = getOriVolRows[0]?.data || getOriVolRows?.data || getOriVolRows;
+        if (!Array.isArray(apiData)) {
+          apiData = [apiData];
+        }
+        
+        let filteredApiValue = apiData?.filter(
           (rowEle: any) => rowEle.programName == currentThirdRow[1].value && rowEle.country == currentThirdRow[0].value
         );
+        
+        console.log('Filtered Originator Volume data:', filteredApiValue);
+        
         if (filteredApiValue && filteredApiValue.length > 0) {
+          const matchedData = filteredApiValue[0];
+          
           // Update row 2 - RoW ORG volume factor
-          filteredApiValue[0].rowOrgvolfactor.forEach((e: any) => {
-            newSetRows[2].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          if (matchedData.rowOrgvolfactor && Array.isArray(matchedData.rowOrgvolfactor)) {
+            matchedData.rowOrgvolfactor.forEach((e: any) => {
+              newSetRows[2].forEach((re: any) => {
+                // Use == to handle both string and number comparison
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
+          
           // Update row 3 - Originator Market size
-          filteredApiValue[0].rowOriginatorMarketSize.forEach((e: any) => {
-            newSetRows[3].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          if (matchedData.rowOriginatorMarketSize && Array.isArray(matchedData.rowOriginatorMarketSize)) {
+            matchedData.rowOriginatorMarketSize.forEach((e: any) => {
+              newSetRows[3].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
+          
           // Update row 4 - Originator Market size after
-          filteredApiValue[0].rowOriginatorMarketSizeAfter.forEach((e: any) => {
-            newSetRows[4].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          if (matchedData.rowOriginatorMarketSizeAfter && Array.isArray(matchedData.rowOriginatorMarketSizeAfter)) {
+            matchedData.rowOriginatorMarketSizeAfter.forEach((e: any) => {
+              newSetRows[4].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
+          
+          console.log('Updated rows for Originator Volume:', newSetRows);
           setRows(newSetRows);
+        } else {
+          console.warn('No matching data found for Originator Volume');
         }
       } else if (cardType == 'Originator Price') {
         let currentFactorRow = newSetRows[1];
-        let filteredApiValue = getOriPriceRows[0]?.data?.filter(
+        console.log('Looking for:', { 
+          programName: currentFactorRow[1].value, 
+          country: currentFactorRow[0].value 
+        });
+        
+        // Handle different possible response structures
+        let apiData = getOriPriceRows[0]?.data || getOriPriceRows?.data || getOriPriceRows;
+        if (!Array.isArray(apiData)) {
+          apiData = [apiData];
+        }
+        
+        let filteredApiValue = apiData?.filter(
           (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
         );
+        
+        console.log('Filtered Originator Price data:', filteredApiValue);
+        
         if (filteredApiValue && filteredApiValue.length > 0) {
+          const matchedData = filteredApiValue[0];
+          
           // Update row 1 - RoW ORG price factor
-          filteredApiValue[0].rowOrgpricefactor.forEach((e: any) => {
-            newSetRows[1].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          if (matchedData.rowOrgpricefactor && Array.isArray(matchedData.rowOrgpricefactor)) {
+            matchedData.rowOrgpricefactor.forEach((e: any) => {
+              newSetRows[1].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
+          
           // Update row 2 - Originator ex-factory price
-          filteredApiValue[0].rowOriginatorExfactorPrice.forEach((e: any) => {
-            newSetRows[2].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          if (matchedData.rowOriginatorExfactorPrice && Array.isArray(matchedData.rowOriginatorExfactorPrice)) {
+            matchedData.rowOriginatorExfactorPrice.forEach((e: any) => {
+              newSetRows[2].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
 
+          console.log('Updated rows for Originator Price:', newSetRows);
           setRows(newSetRows);
+        } else {
+          console.warn('No matching data found for Originator Price');
         }
       } else if (cardType == 'Sandoz Price') {
         let currentFactorRow = newSetRows[1];
-        let filteredApiValue = getSandozPricRows[0]?.data?.filter(
+        
+        // Handle different possible response structures
+        let apiData = getSandozPricRows[0]?.data || getSandozPricRows?.data || getSandozPricRows;
+        if (!Array.isArray(apiData)) {
+          apiData = [apiData];
+        }
+        
+        let filteredApiValue = apiData?.filter(
           (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
         );
+        
         if (filteredApiValue && filteredApiValue.length > 0) {
-          filteredApiValue[0].rowSandozpriFac.forEach((e: any) => {
-            newSetRows[1].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          const matchedData = filteredApiValue[0];
+          
+          if (matchedData.rowSandozpriFac && Array.isArray(matchedData.rowSandozpriFac)) {
+            matchedData.rowSandozpriFac.forEach((e: any) => {
+              newSetRows[1].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
-          filteredApiValue[0].rowSandozPrice.forEach((e: any) => {
-            newSetRows[2].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          }
+          
+          if (matchedData.rowSandozPrice && Array.isArray(matchedData.rowSandozPrice)) {
+            matchedData.rowSandozPrice.forEach((e: any) => {
+              newSetRows[2].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
 
           setRows(newSetRows);
         }
       } else if (cardType == 'Sandoz Volume') {
         let currentFactorRow = newSetRows[1];
-        let filteredApiValue = getSandozVolRows[0]?.data?.filter(
+        
+        // Handle different possible response structures
+        let apiData = getSandozVolRows[0]?.data || getSandozVolRows?.data || getSandozVolRows;
+        if (!Array.isArray(apiData)) {
+          apiData = [apiData];
+        }
+        
+        let filteredApiValue = apiData?.filter(
           (rowEle: any) => rowEle.programName == currentFactorRow[1].value && rowEle.country == currentFactorRow[0].value
         );
+        
         if (filteredApiValue && filteredApiValue.length > 0) {
-          filteredApiValue[0].rowSandozvolFac.forEach((e: any) => {
-            newSetRows[1].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          const matchedData = filteredApiValue[0];
+          
+          if (matchedData.rowSandozvolFac && Array.isArray(matchedData.rowSandozvolFac)) {
+            matchedData.rowSandozvolFac.forEach((e: any) => {
+              newSetRows[1].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
-          filteredApiValue[0].rowSandozVolume.forEach((e: any) => {
-            newSetRows[2].forEach((re: any) => {
-              if (e.year == re.key) {
-                re.value = e.value ?? '0';
-              }
+          }
+          
+          if (matchedData.rowSandozVolume && Array.isArray(matchedData.rowSandozVolume)) {
+            matchedData.rowSandozVolume.forEach((e: any) => {
+              newSetRows[2].forEach((re: any) => {
+                if (String(e.year) == String(re.key)) {
+                  re.value = e.value ?? '0';
+                }
+              });
             });
-          });
+          }
 
           setRows(newSetRows);
         }
